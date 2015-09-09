@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup as bs4
 import requests
 import re
 import time
+import datetime
 
 def get_details_apprt(url):
 	r_details = requests.get(url)
@@ -14,7 +15,6 @@ def get_details_apprt(url):
 	prix = prix[0]['title']
 	print('prix: ' + prix)
 	aside_infos = html.select('aside.panel.panel-body.panel-info')[0].text
-#	print("+++",aside_infos,"+++")
 	m = re.match(r'.*?Nombre de pièces: ([0-9]+).*?', aside_infos, re.DOTALL)
 	if m:
 		nb_pieces = m.group(1)
@@ -35,32 +35,16 @@ def get_details_apprt(url):
 		print('adresse: ' + adresse)
 
 	date = html.select('.date.dtstart.value')[0]['title']
-	print('date: ' + date)
+	print(date)
+	print('date: ' + extract_date_infos(date)[0])
 
-def get_details_voitures(url):
-	r_details = request.get(url)
-	html = bs4(r_details.text, 'html.parser')
-	prix = html.select('.price-header .amount')['title']
-	aside_infos = html.select('.date.dtstart.value').text
-	m = re.match('<h2 class="font-normal fs12 no-margin ln22"><strong>Année-Modèle:</strong> (\d)</h2>', aside_infos)
-	if m:
-		annee_modele = m.group(1)
-	m = re.match('<h2 class="font-normal fs12 no-margin ln22"><strong>Kilométrage:</strong> ([\d\s-])</h2>', aside_infos)
-	if m:
-		kilometrage = m.group(1)
-	m = re.match('<h2 class="font-normal fs12 no-margin ln22"><strong>Type de carburant:</strong> ([\d\s-])</h2>', aside_infos)
-	if m:
-		carburant = m.group(1)
-
-	m = re.match('<h2 class="font-normal fs12 no-margin ln22"><strong>Marque:</strong> ([\d\s-])</h2>', aside_infos)
-	if m:
-		marque = m.group(1)
-
-	m = re.match('<h2 class="font-normal fs12 no-margin ln22"><strong>Modèle:</strong> ([\d\s-])</h2>', aside_infos)
-	if m:
-		modele = m.group(1)
-	date = html.select('.date.dtstart.value')['title']
-	print(prix)
+def extract_date_infos(dt):
+	dt = re.sub('T', ' ', dt)
+	t_obj = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
+	print('extract_date_infos ' + dt)
+	print("apres")
+	print('date object ' + dt_obj)
+	return (dt_obj.year, dt_obj.month)
 
 url = "http://www.avito.ma/fr/maroc/?ca=15&q=&cg=1010&w=1005&st=s&m=&m=&spr=&mpr="
 
