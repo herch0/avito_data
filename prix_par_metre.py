@@ -1,23 +1,40 @@
 import csv
 import re
 
-with open('data_avito.csv', newline='') as csvfile:
+with open('apprt_casa.csv', newline='') as csvfile:
   csvreader = csv.reader(csvfile, delimiter=";", quotechar='"')
   header = True
-  surface_total = 0
-  prix_total = 0
+  prix_metre_total = 0
+  prix_metre_secteur = {}
+  nb = 0
   for row in csvreader:
     if header:
       header = False
       continue
     else:
+      nb+=1
       annee = row[0]
       mois = row[1]
-      prix = row[3]
+      prix = int(row[3])
       surface = row[5]
-      surface_nb = surface[0:-2]
-      surface_total += surface
-      prix_total += prix
+      secteur = row[6]
+      surface_nb = int(surface[0:-2])
+      prix_metre = prix/surface_nb;
+      prix_metre_total += prix_metre
+      if secteur in prix_metre_secteur:
+        prix_metre_secteur[secteur].append(prix_metre)
+      else:
+        prix_metre_secteur[secteur] = [prix_metre]
+#      print(prix, surface, surface_nb, prix_metre, secteur)
     #end else
   #end for
-  print(surface_total / )
+print("moyenne total", prix_metre_total/nb)
+for secteur, val in prix_metre_secteur.items():
+#print(k, len(v))
+  nb_ann = len(val)
+  prix_total_secteur = 0
+  for prix in val:
+    prix_total_secteur += prix
+  moyenne = prix_total_secteur / nb_ann
+  if nb_ann > 10:
+    print(secteur, moyenne, nb_ann)
