@@ -25,16 +25,17 @@ with open('apprt_casa.csv', newline='') as csvfile:
         prix_metre_secteur[secteur].append(prix_metre)
       else:
         prix_metre_secteur[secteur] = [prix_metre]
-#      print(prix, surface, surface_nb, prix_metre, secteur)
     #end else
   #end for
 print("moyenne total", prix_metre_total/nb)
-for secteur, val in prix_metre_secteur.items():
-#print(k, len(v))
-  nb_ann = len(val)
-  prix_total_secteur = 0
-  for prix in val:
-    prix_total_secteur += prix
-  moyenne = prix_total_secteur / nb_ann
-  if nb_ann > 10:
-    print(secteur, moyenne, nb_ann)
+with open('prix_par_metre_casa.csv', 'w') as csvfile:
+  csvwriter = csv.writer(csvfile, delimiter=';')
+  for secteur, val in prix_metre_secteur.items():
+    nb_ann = len(val)
+    prix_total_secteur = 0
+    for prix in val:
+      prix_total_secteur += prix
+    moyenne = prix_total_secteur / nb_ann
+    if nb_ann > 10:
+      print(secteur, moyenne, nb_ann)
+      csvwriter.writerow([secteur, moyenne, nb_ann])
