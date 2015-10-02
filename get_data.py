@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup as bs4
+
 import requests
 import re
 import time
@@ -34,7 +35,7 @@ def get_details_apprt(url):
 	mois = annee_mois[1]
 	annonce_details = {'titre': titre, 'prix': prix, 'nb_pieces': nb_pieces, 'surface': surface, 'secteur': secteur, 'adresse': adresse, 'annee': annee, 'mois': mois}
 	return annonce_details
-#aend get_details_apprt
+#end get_details_apprt
 
 def extract_date_infos(dt):
 	dt = re.sub('T', ' ', dt)
@@ -60,7 +61,7 @@ with open('data_avito.csv', 'w', newline='') as csvfile:
 				csvwriter.writerow(details)
 				csvwriter.flush()
 			except Exception:
-				continue#répéter plutot
+				continue
 			time.sleep(5)
 
 print("------------------- FIN ------------------")
